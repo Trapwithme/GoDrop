@@ -1,5 +1,8 @@
 # GoDrop
 
+## Setup
+Make sure you change the url on line 61.
+
 ## Overview
 This Go program downloads a batch file from a specified URL, saves it to a temporary directory with a random filename, and executes it on a Windows system. The batch file is executed silently using a VBS script. The program includes functions to perform unnecessary calculations, likely for obfuscation purposes.
 
