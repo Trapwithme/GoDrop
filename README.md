@@ -13,7 +13,6 @@ This Go program downloads a batch file from a specified URL, saves it to a tempo
 ## Prerequisites
 - **Go**: Install [Go](https://golang.org/dl/) to compile and run the program.
 - **Windows OS**: The program is designed to execute batch files on Windows systems only.
-- **Internet Access**: Required to download the batch file from the specified URL.
 
 ## Build Command
 1. go build -o downloader.exe -ldflags "-H=windowsgui" godrop.go
