@@ -15,9 +15,9 @@ if "%ENC_URL%"=="" (
   exit /b 1
 )
 
-powershell -NoProfile -Command "(Get-Content godrop.ps1 -Raw).Replace('__ENC_URL__','%ENC_URL%') | Set-Content ..\..\dist\godrop.ps1"
+powershell -NoProfile -Command "(Get-Content godrop.js -Raw).Replace('__ENC_URL__','%ENC_URL%') | Set-Content ..\..\dist\godrop-js.js"
 if errorlevel 1 exit /b 1
 
-echo Copied script: ..\..\dist\godrop.ps1
+echo Built script: ..\..\dist\godrop-js.js
 echo Embedded encrypted URL in script.
 endlocal

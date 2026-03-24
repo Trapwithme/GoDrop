@@ -28,5 +28,10 @@ cd ..\ports\cpp
 call builder.bat
 cd ..\..\scripts
 
+echo Preparing JavaScript...
+cd ..\ports\javascript
+call builder.bat
+cd ..\..\scripts
+
 echo Done. Outputs in ..\dist\
 endlocal
