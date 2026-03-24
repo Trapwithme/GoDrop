@@ -11,13 +11,13 @@ GoDrop now keeps every language in an organized folder under `ports/`, including
 - C++: `ports/cpp`
 
 Each folder includes a `builder.bat` that:
-1. Prompts the user for a direct URL at runtime.
-2. Builds (or prepares) that language variant.
-3. Generates a `run-downloader.bat` launcher in the same folder with the entered URL wired in.
+1. Prompts for the download URL.
+2. Encrypts and embeds that URL into code/script for the selected language.
+3. Builds (or prepares) that language variant.
 
 ## Behavior
 
-All variants download/save `.bat` or `.exe` artifacts and print status output in locale options (`en`, `es`, `fr`).
+All variants now decrypt the embedded URL at runtime, download/save `.bat` or `.exe` artifacts, and print status output in locale options (`en`, `es`, `fr`).
 
 ## Per-language usage
 
@@ -25,35 +25,35 @@ All variants download/save `.bat` or `.exe` artifacts and print status output in
 ```bat
 cd ports\go
 builder.bat
-run-downloader.bat
+..\..\dist\godrop-go.exe --out "%TEMP%\godrop-output.bat" --type bat --locale en
 ```
 
 ### Rust
 ```bat
 cd ports\rust
 builder.bat
-run-downloader.bat
+..\..\dist\godrop-rust.exe --out "%TEMP%\godrop-output.bat" --file-type bat --locale en
 ```
 
 ### C#
 ```bat
 cd ports\csharp
 builder.bat
-run-downloader.bat
+..\..\dist\godrop-csharp.exe --out "%TEMP%\godrop-output.bat" --type bat --locale en
 ```
 
 ### PowerShell
 ```bat
 cd ports\powershell
 builder.bat
-run-downloader.bat
+powershell -ExecutionPolicy Bypass -File ..\..\dist\godrop.ps1 -Out "%TEMP%\godrop-output.bat" -Type bat -Locale en
 ```
 
 ### C++
 ```bat
 cd ports\cpp
 builder.bat
-run-downloader.bat
+..\..\dist\godrop-cpp.exe "%TEMP%\godrop-output.bat" bat en
 ```
 
 ## Build everything

