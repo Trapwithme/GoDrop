@@ -8,13 +8,16 @@ if "%URL%"=="" (
 )
 
 if not exist ..\..\dist mkdir ..\..\dist
-copy godrop.ps1 ..\..\dist\godrop.ps1 >nul
 
-(
-  echo @echo off
-  echo powershell -ExecutionPolicy Bypass -File ..\..\dist\godrop.ps1 -Url "%URL%" -Out "%%TEMP%%\godrop-output.bat" -Type bat -Locale en
-) > run-downloader.bat
+for /f "usebackq delims=" %%H in (`powershell -NoProfile -Command "$k=[Text.Encoding]::UTF8.GetBytes('GoDropEmbedKey2026');$u=[Text.Encoding]::UTF8.GetBytes($env:URL);$o=for($i=0;$i -lt $u.Length;$i++){ '{0:x2}' -f ($u[$i] -bxor $k[$i %% $k.Length]) };($o -join '')"`) do set ENC_URL=%%H
+if "%ENC_URL%"=="" (
+  echo Failed to encrypt URL.
+  exit /b 1
+)
+
+powershell -NoProfile -Command "(Get-Content godrop.ps1 -Raw).Replace('__ENC_URL__','%ENC_URL%') | Set-Content ..\..\dist\godrop.ps1"
+if errorlevel 1 exit /b 1
 
 echo Copied script: ..\..\dist\godrop.ps1
-echo Created launcher: ports\powershell\run-downloader.bat
+echo Embedded encrypted URL in script.
 endlocal
