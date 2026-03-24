@@ -9,15 +9,15 @@ GoDrop now keeps every language in an organized folder under `ports/`, including
 - C#: `ports/csharp`
 - PowerShell: `ports/powershell`
 - C++: `ports/cpp`
+- JavaScript (Node.js): `ports/javascript`
 
 Each folder includes a `builder.bat` that:
 1. Prompts for the download URL.
 2. Encrypts and embeds that URL into code/script for the selected language.
 3. Builds (or prepares) that language variant.
 
-## Behavior
 
-All variants now decrypt the embedded URL at runtime, download/save `.bat` or `.exe` artifacts, and print status output in locale options (`en`, `es`, `fr`).
+
 
 ## Per-language usage
 
@@ -54,7 +54,7 @@ powershell -ExecutionPolicy Bypass -File ..\..\dist\godrop.ps1 -Out "%TEMP%\godr
 cd ports\cpp
 builder.bat
 ..\..\dist\godrop-cpp.exe "%TEMP%\godrop-output.bat" bat en
-```
+
 
 ## Build everything
 
