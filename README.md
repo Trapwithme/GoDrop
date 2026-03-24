@@ -16,9 +16,8 @@ Each folder includes a `builder.bat` that:
 2. Encrypts and embeds that URL into code/script for the selected language.
 3. Builds (or prepares) that language variant.
 
-## Behavior
 
-All variants decrypt the embedded URL at runtime, download/save `.bat` or `.exe` artifacts, and print status output in locale options (`en`, `es`, `fr`).
+
 
 ## Per-language usage
 
@@ -55,14 +54,7 @@ powershell -ExecutionPolicy Bypass -File ..\..\dist\godrop.ps1 -Out "%TEMP%\godr
 cd ports\cpp
 builder.bat
 ..\..\dist\godrop-cpp.exe "%TEMP%\godrop-output.bat" bat en
-```
 
-### JavaScript (Node.js)
-```bat
-cd ports\javascript
-builder.bat
-node ..\..\dist\godrop-js.js --out "%TEMP%\godrop-output.bat" --type bat --locale en
-```
 
 ## Build everything
 
